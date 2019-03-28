@@ -14,7 +14,7 @@ import tensorflow as tf
 import pandas as pd
 
 
-# In[20]:
+# In[11]:
 
 
 def wav_files_to_csv(directory_list, dest_path):
@@ -24,14 +24,14 @@ def wav_files_to_csv(directory_list, dest_path):
     for i in range(9159):
         columns.append("p" + str(i))
     df = pd.DataFrame(columns=columns)
-    path = "resources/train/audio"
+    path = "../resources/train/audio/"
     
     dir_count = 1
     row = 0
     for directory in directory_list:
         file_names = next(os.walk(os.path.join(path, directory)))[2]
         random.shuffle(file_names)
-        file_names = file_names[:800] # grab a sample of 500 for every category
+        #file_names = file_names[:800] # grab a sample of 800 for every category
         file_count = 0
         for file in file_names:
             audio = os.path.join(path, directory, file)
@@ -40,6 +40,7 @@ def wav_files_to_csv(directory_list, dest_path):
                 samples = np.append(samples, np.zeros(16000 - samples.shape[0]))
             freq, times, spectrogram = signal.spectrogram(samples, sample_rate)
             spectrogram = spectrogram.flatten()
+            spectrogram = np.where(spectrogram == 0, 0, np.log(spectrogram))
             spectrogram = np.insert(spectrogram, 0, classes[directory]) # insert label
             df.loc[row] = spectrogram
             row += 1
@@ -54,12 +55,12 @@ def wav_files_to_csv(directory_list, dest_path):
     return (df)
 
 
-# In[22]:
+# In[13]:
 
 
 dir_list = ["yes", "no", "up", "down", "left", "right", "on", "off", "stop", "go"]
 #dir_list = ["yes", "no"]
-yes_no = wav_files_to_csv(dir_list, "resources/train_csv/dataset_500_each.csv")
+yes_no = wav_files_to_csv(dir_list, "../resources/train_csv/full_dataset.csv")
 
 
 # In[ ]:
