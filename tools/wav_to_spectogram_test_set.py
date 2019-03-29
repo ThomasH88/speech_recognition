@@ -25,8 +25,6 @@ def wav_files_to_csv(dest_path, start, end):
     file_names = file_names[start:end]
     arr_1 = np.zeros(shape=((end - start) // 2, 9159))
     arr_2 = np.zeros(shape=((end - start) // 2, 9159))
-    if (end == 158538):
-        arr_2 = np.zeros(shape=(18538, 9159))
     file_count = 0
     row = 0
     for file in file_names:
